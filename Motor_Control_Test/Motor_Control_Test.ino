@@ -23,17 +23,16 @@ void setup() {
  
   //initialize the variables we're linked to
   //Input = analogRead(PIN_INPUT); //will need to change
-  Setpoint = 100;//should be the middle of the sensor range
+  Setpoint = 0;//should be the middle of the sensor range
   //turn the PID on
-  myPID.SetMode(AUTOMATIC);
+  myPID.SetMode(AUTOMATIC);//from PID library
   // put your setup code here, to run once:
-  sens_read();
 
 }
 
 void loop() {
   //PID implemetation code:
-  int go_fast;
+  int go_fast; //need for function call
   Input = sens_read();//calls the fuction sens_read and sets Imput to be the error
   myPID.Compute(); //calls the PID fuction and executes
   go_fast = motor_run(Output); //calls the funtion mot_run with the output from the PID.  Effectivly changes the motor speed
@@ -48,10 +47,10 @@ float sens_read(){
 int motor_run(int Output){
   //makes the motors run with different speeds depending on the output from the PID
   diff = Output; 
-  speed_L = 100; //inicial motor speed in straigt line can change
-  speed_R = 100; //inicial motor speed in straigt line can change
-  myMotor_L->setSpeed(speed_L - diff);
-  myMotor_R->setSpeed(speed_R + diff);
+  speed_L = 100 - diff; //inicial motor speed in straigt line can change
+  speed_R = 100 + diff; //inicial motor speed in straigt line can change
+  myMotor_L->setSpeed(speed_L);
+  myMotor_R->setSpeed(speed_R);
   myMotor_L->run(FORWARD);
   myMotor_R->run(FORWARD);
 }
