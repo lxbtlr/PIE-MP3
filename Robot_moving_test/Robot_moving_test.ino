@@ -11,10 +11,6 @@ int i = 0;
 int t = 0;
 int diff;
 
-double Setpoint, Input, Output; //variables that are critical for PID control
-//Specify the links and initial tuning parameters
-double Kp=2, Ki=5, Kd=1;
-PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 void setup() {
   long baudRate = 115200;       // NOTE1: The baudRate for sending & receiving programs must match
@@ -28,5 +24,20 @@ void loop() {
   myMotor_L->setSpeed(speed_L);
   myMotor_R->setSpeed(speed_R);
   myMotor_L->run(FORWARD);
-  myMotor_R->run(BACKWARD);
+  myMotor_R->run(FORWARD);
+  delay(3000);
+  speed_L = 150;
+  speed_R = 50;
+  myMotor_L->setSpeed(speed_L);
+  myMotor_R->setSpeed(speed_R);
+  myMotor_L->run(FORWARD);
+  myMotor_R->run(FORWARD);
+  delay(3000);
+  speed_L = 50;
+  speed_R = 150;
+  myMotor_L->setSpeed(speed_L);
+  myMotor_R->setSpeed(speed_R);
+  myMotor_L->run(FORWARD);
+  myMotor_R->run(FORWARD);
+  delay(3000);
 }
