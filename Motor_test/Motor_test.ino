@@ -3,8 +3,8 @@
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 #include <PID_v1.h> // Brett Beauregard PID library 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
-Adafruit_DCMotor *myMotor_R = AFMS.getMotor(1);
-Adafruit_DCMotor *myMotor_L = AFMS.getMotor(2);
+Adafruit_DCMotor *myMotor_R = AFMS.getMotor(3);
+Adafruit_DCMotor *myMotor_L = AFMS.getMotor(4);
 int speed_L = 0;
 int speed_R = 0;
 int i = 0;
@@ -24,6 +24,7 @@ void setup() {
 
 void loop() {
   speed_L = 100;
+  Serial.print(speed_L);
   speed_R = 100;
   myMotor_L->setSpeed(speed_L);
   myMotor_R->setSpeed(speed_R);
