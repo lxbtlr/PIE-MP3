@@ -30,35 +30,4 @@ void loop() {
   Serial.print(" ");
   Serial.println(D);
   
-//  nmax = max(A,B);
-//  nmax = max(nmax,C);
-//  nmax = max(nmax,D);
-//  Serial.println(nmax);
-
-
-
-//  Serial.print("A: ");
-//  if (A >= 800) {
-//    Serial.print("1 ");
-//  } else {
-//    Serial.print("0 ");
-//  }
-//  Serial.print("B: ");
-//  if (B >= 800) {
-//    Serial.print("1 ");
-//  } else {
-//    Serial.print("0 ");
-//  }
-//  Serial.print("C: ");
-//  if (C >= 800) {
-//    Serial.print("1 ");
-//  } else {
-//    Serial.print("0 ");
-//  }
-//  Serial.print("D: ");
-//  if (D >= 800) {
-//    Serial.println("1");
-//  } else {
-//    Serial.println("0");
-//  }
 }
