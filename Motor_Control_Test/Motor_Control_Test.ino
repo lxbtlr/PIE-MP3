@@ -5,6 +5,8 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 Adafruit_DCMotor *myMotor_R = AFMS.getMotor(1);
 Adafruit_DCMotor *myMotor_L = AFMS.getMotor(2);
+int leftSense = A1;
+int rightSense = A2;
 int speed_L = 0;
 int speed_R = 0;
 int i = 0;
@@ -13,13 +15,16 @@ int diff;
 
 double Setpoint, Input, Output; //variables that are critical for PID control
 //Specify the links and initial tuning parameters
-double Kp=2, Ki=5, Kd=1;
+double Kp=2, Ki=0, Kd=0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 void setup() {
   long baudRate = 115200;       // NOTE1: The baudRate for sending & receiving programs must match
   Serial.begin(baudRate);     // NOTE2: Set the baudRate to 115200 for faster communication  
   AFMS.begin();
+  
+  pinMode(leftSense, INPUT);
+  pinMode(rightSense, INPUT);
  
   //initialize the variables we're linked to
   //Input = analogRead(PIN_INPUT); //will need to change
@@ -40,15 +45,27 @@ void loop() {
 
 float sens_read(){
   //reads the 4 sensors and returns an angle at which the line is currently detected
-  Serial.print('I');
-  return 0;
+  int L_sens = analogRead(leftSense);
+  int R_sens = analogRead(rightSense);
+  Serial.print(L_sens);
+  Serial.print("  ");
+  Serial.print(R_sens);
+  Serial.println();
+  int ang = abs(leftSense - rightSense);
+  Serial.print("  ang:");
+  Serial.print(ang);
+  Serial.println();
+  return ang;
 }
 
 int motor_run(int Output){
   //makes the motors run with different speeds depending on the output from the PID
-  diff = Output; 
-  speed_L = 100 - diff; //inicial motor speed in straigt line can change
-  speed_R = 100 + diff; //inicial motor speed in straigt line can change
+  diff = Output;
+  Serial.print("  diff:"); 
+  Serial.print(diff);
+  Serial.println();
+  speed_L = 50 - diff; //inicial motor speed in straigt line can change
+  speed_R = 50 + diff; //inicial motor speed in straigt line can change
   myMotor_L->setSpeed(speed_L);
   myMotor_R->setSpeed(speed_R);
   myMotor_L->run(FORWARD);
