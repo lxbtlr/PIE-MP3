@@ -43,14 +43,15 @@ void loop() {
   //PID implemetation code:
   int go_fast; //need for function call
   Input = sens_read();//calls the fuction sens_read and sets Imput to be the error
-  Serial.print("input");
-  Serial.print(Input);
-  Serial.println();
+//  Serial.print("input");
+//  Serial.print(Input);
+//  Serial.println();
   myPID.Compute(); //calls the PID fuction and executes
-  Serial.print("output");
-  Serial.print(Output);
-  Serial.println();
+//  Serial.print("output");
+//  Serial.print(Output);
+//  Serial.println();
   go_fast = motor_run(Output); //calls the funtion mot_run with the output from the PID.  Effectivly changes the motor speed
+  delay(100);
 }
 
 float sens_read(){
@@ -60,22 +61,22 @@ float sens_read(){
   int Sense_C = analogRead(Sense_2);
   int Sense_D = analogRead(Sense_3);
  
-  Sense_A = sq(Sense_A/100);
-  Sense_B = sq(Sense_B/100);
-  Sense_C = sq(Sense_C/100);
-  Sense_D = sq(Sense_D/100);
+  Sense_A = Sense_A/10;
+  Sense_B = Sense_B/10;
+  Sense_C = Sense_C/10;
+  Sense_D = Sense_D/10;
  
-//  Serial.print(Sense_A);
-//  Serial.print("  ");
-//  Serial.print(Sense_B);
-//  Serial.print("   ");
-//  Serial.print(Sense_C);
-//  Serial.print("  ");
-//  Serial.print(Sense_D);
-//  Serial.println();
+  Serial.print(Sense_A);
+  Serial.print("  ");
+  Serial.print(Sense_B);
+  Serial.print("   ");
+  Serial.print(Sense_C);
+  Serial.print("  ");
+  Serial.print(Sense_D);
+  Serial.println();
   
   int sense = 0;
-  int threshold = 50;
+  int threshold = 68;
   
   if (Sense_A > threshold){
     sense = 0;  
@@ -90,32 +91,28 @@ float sens_read(){
     sense = 60;
     }
     else{
-      sense = 25; //will probably come back to bite us
+      sense = 29; //will probably come back to bite us
     }
   
-//  Serial.print(sense);
-//  Serial.println();
-  
-//  Serial.print("ang:  ");
-//  Serial.print(ang);
-//  Serial.println();
   return sense;
 }
 
 int motor_run(int Output){
   //makes the motors run with different speeds depending on the output from the PID
-  diff = Output - 30;
-  Serial.print("diff:  "); 
-  Serial.print(diff);
-  Serial.println();
-  speed_L = 40 - diff; //inicial motor speed in straigt line can change
-  speed_R = 40 + diff; //inicial motor speed in straigt line can change
+  int base_speed = 40;
+  diff = Output - 30*Kp;
+//  Serial.print("diff:  "); 
+//  Serial.print(diff);
+//  Serial.println();
+  speed_L = base_speed + diff; //inicial motor speed in straigt line can change
+  speed_R = base_speed - diff; //inicial motor speed in straigt line can change
   myMotor_L->setSpeed(speed_L);
   myMotor_R->setSpeed(speed_R);
-  Serial.print("speed_L");
-  Serial.println(speed_L);
-  Serial.print("speed_R");
-  Serial.println(speed_R);
+  Serial.print("speed_L: ");
+  Serial.print(speed_L);
+  Serial.print("speed_R: ");
+  Serial.print(speed_R);
+  Serial.println();
   myMotor_L->run(FORWARD);
   myMotor_R->run(FORWARD);
 }
