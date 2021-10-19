@@ -104,7 +104,7 @@ int motor_run(int Output){
 //  Serial.print("diff:  "); 
 //  Serial.print(diff);
 //  Serial.println();
-  speed_L = base_speed + diff; //inicial motor speed in straigt line can change
+  speed_L = base_speed + 10 + diff; //inicial motor speed in straigt line can change
   speed_R = base_speed - diff; //inicial motor speed in straigt line can change
   myMotor_L->setSpeed(speed_L);
   myMotor_R->setSpeed(speed_R);
