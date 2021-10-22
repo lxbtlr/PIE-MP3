@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
-//#include <PID_v1.h> // Brett Beauregard PID library 
+#include <PID_v1.h> // Brett Beauregard PID library 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 Adafruit_DCMotor *myMotor_R = AFMS.getMotor(1);
 Adafruit_DCMotor *myMotor_L = AFMS.getMotor(3);
@@ -18,8 +18,8 @@ int diff;
 
 double Setpoint, Input, Output; //variables that are critical for PID control
 //Specify the links and initial tuning parameters
-double Kp=5, Ki=0, Kd=0;
-//PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+double Kp=3, Ki=0, Kd=0;
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 void setup() {
   
@@ -33,11 +33,9 @@ void setup() {
   pinMode(Sense_3, INPUT);
  
   //initialize the variables we're linked to
-  Setpoint = 10;//should be the middle of the sensor range
+  Setpoint = 20;//should be the middle of the sensor range
   //turn the PID on
-//  myPID.SetMode(AUTOMATIC);//from PID library
-  // put your setup code here, to run once:
-  delay(2000);
+  myPID.SetMode(AUTOMATIC);//from PID library
 }
 
 void loop() {
@@ -47,11 +45,10 @@ void loop() {
 //  Serial.print("input");
 //  Serial.print(Input);
 //  Serial.println();
-//  myPID.Compute(); //calls the PID fuction and executes
+  myPID.Compute(); //calls the PID fuction and executes
 //  Serial.print("output");
 //  Serial.print(Output);
 //  Serial.println();
-  Output = Input*Kp;
   go_fast = motor_run(Output); //calls the funtion mot_run with the output from the PID.  Effectivly changes the motor speed
 }
 
@@ -87,10 +84,10 @@ float sens_read(){
       sense = 0;  
     }
     else if (Sense_B > threshold){
-      sense = 7;
+      sense = 6;
     }
     else if (Sense_C > threshold){
-      sense = 13;
+      sense = 14;
     }
     else if (Sense_D > threshold){
       sense = 20;
@@ -104,13 +101,13 @@ float sens_read(){
 
 int motor_run(int Output){
   //makes the motors run with different speeds depending on the output from the PID
-  int base_speed = 50;
-  diff = Output - Setpoint*Kp;
+  int base_speed = 40;
+  diff = Output - 10*Kp;
 //  Serial.print("diff:  "); 
 //  Serial.print(diff);
 //  Serial.println();
-  speed_L = base_speed + diff; //inicial motor speed in straigt line can change
-  speed_R = base_speed - diff; //inicial motor speed in straigt line can change
+  speed_L = base_speed - diff; //inicial motor speed in straigt line can change
+  speed_R = base_speed + diff; //inicial motor speed in straigt line can change
   if(speed_L >255){
     speed_L=255;
   }else if(speed_L < 0){
@@ -128,6 +125,6 @@ int motor_run(int Output){
   Serial.print("speed_R: ");
   Serial.print(speed_R);
   Serial.println();
-  myMotor_L->run(BACKWARD);
+  myMotor_L->run(FORWARD);
   myMotor_R->run(FORWARD);
 }

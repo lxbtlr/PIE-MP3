@@ -4,7 +4,7 @@
 #include <PID_v1.h> // Brett Beauregard PID library 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 Adafruit_DCMotor *myMotor_R = AFMS.getMotor(1);
-Adafruit_DCMotor *myMotor_L = AFMS.getMotor(4);
+Adafruit_DCMotor *myMotor_L = AFMS.getMotor(3);
 
 
 int speed_L = 0;
