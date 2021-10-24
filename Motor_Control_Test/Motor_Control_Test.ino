@@ -18,7 +18,7 @@ int diff;
 
 double Setpoint, Input, Output; //variables that are critical for PID control
 //Specify the links and initial tuning parameters
-double Kp=3, Ki=0, Kd=0;
+double Kp=3.5, Ki=0, Kd=0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 void setup() {
@@ -36,9 +36,15 @@ void setup() {
   Setpoint = 20;//should be the middle of the sensor range
   //turn the PID on
   myPID.SetMode(AUTOMATIC);//from PID library
+  Serial.println("Type Command (Kp)");
+  
 }
 
 void loop() {
+  if (Serial.available()) {
+    Kp = Serial.readStringUntil('\n').toFloat();
+  }
+  Serial.println(Kp);
   //PID implemetation code:
   int go_fast; //need for function call
   Input = sens_read();//calls the fuction sens_read and sets Imput to be the error
@@ -50,6 +56,8 @@ void loop() {
 //  Serial.print(Output);
 //  Serial.println();
   go_fast = motor_run(Output); //calls the funtion mot_run with the output from the PID.  Effectivly changes the motor speed
+
+  
 }
 
 float sens_read(){
@@ -64,36 +72,37 @@ float sens_read(){
   Sense_C = Sense_C/10;
   Sense_D = Sense_D/10;
  
-  Serial.print(Sense_A);
-  Serial.print("  ");
-  Serial.print(Sense_B);
-  Serial.print("   ");
-  Serial.print(Sense_C);
-  Serial.print("  ");
-  Serial.print(Sense_D);
-  Serial.println();
+//  Serial.print(Sense_A);
+//  Serial.print(",");
+//  Serial.print(Sense_B);
+//  Serial.print(",");
+//  Serial.print(Sense_C);
+//  Serial.print(",");
+//  Serial.print(Sense_D);
+//  Serial.print(",");
+  //Serial.println();
   
   int sense = 0;
   int threshold = 60;
   if( Sense_A>threshold && Sense_B>threshold ){
-      sense = -2;
+      sense = -5;
     }
     else if(Sense_C>threshold && Sense_D>threshold) {
-      sense = 23;
+      sense = 25;
     }else if (Sense_A > threshold){
       sense = 0;  
     }
     else if (Sense_B > threshold){
-      sense = 6;
+      sense = 7;
     }
     else if (Sense_C > threshold){
-      sense = 14;
+      sense = 13;
     }
     else if (Sense_D > threshold){
       sense = 20;
     }
     else{
-      sense = 9; //will probably come back to bite us
+      sense = 9.5; //will probably come back to bite us
     }
   
   return sense;
@@ -101,7 +110,7 @@ float sens_read(){
 
 int motor_run(int Output){
   //makes the motors run with different speeds depending on the output from the PID
-  int base_speed = 40;
+  int base_speed = 35;
   diff = Output - 10*Kp;
 //  Serial.print("diff:  "); 
 //  Serial.print(diff);
@@ -120,11 +129,13 @@ int motor_run(int Output){
   }
   myMotor_L->setSpeed(speed_L);
   myMotor_R->setSpeed(speed_R);
-  Serial.print("speed_L: ");
-  Serial.print(speed_L);
-  Serial.print("speed_R: ");
-  Serial.print(speed_R);
-  Serial.println();
+  //Serial.print("speed_L: ");
+//  Serial.print(speed_L);
+//  Serial.print(",");
+//  //Serial.print("speed_R: ");
+//  Serial.print(speed_R);
+//  Serial.print(";");
+//  Serial.println();
   myMotor_L->run(FORWARD);
   myMotor_R->run(FORWARD);
 }
